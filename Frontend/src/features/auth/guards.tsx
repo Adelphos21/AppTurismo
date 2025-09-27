@@ -1,6 +1,6 @@
 import { useSession } from './useSession';
 import { Navigate } from 'react-router-dom';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { user, status, me } = useSession();
