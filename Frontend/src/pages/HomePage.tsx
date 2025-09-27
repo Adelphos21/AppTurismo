@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function HomePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -7,8 +9,8 @@ export default function HomePage() {
         <span className="text-rose-500 font-semibold">Plataforma moderna, rápida y segura.</span>
       </p>
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs sm:max-w-none justify-center">
-        <a href="/guides" className="px-6 py-3 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition font-bold shadow-lg w-full sm:w-auto">Buscar Guías</a>
-        <a href="/login" className="px-6 py-3 rounded-lg bg-white text-rose-700 border border-rose-300 hover:bg-rose-50 transition font-bold shadow w-full sm:w-auto">Iniciar Sesión</a>
+        <Link to="/guides" className="px-6 py-3 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition font-bold shadow-lg w-full sm:w-auto">Buscar Guías</Link>
+        <Link to="/login" className="px-6 py-3 rounded-lg bg-white text-rose-700 border border-rose-300 hover:bg-rose-50 transition font-bold shadow w-full sm:w-auto">Iniciar Sesión</Link>
       </div>
     </div>
   );
