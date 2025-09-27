@@ -1,9 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import HomePage from '../pages/HomePage';
 import { AppLayout } from './ui/AppLayout';
-// ...importar páginas y guards
 
 const router = createBrowserRouter([
-  // Definir rutas aquí
+  {
+    path: '/',
+    element: <AppLayout><HomePage /></AppLayout>,
+  },
 ]);
 
 export function AppRouter() {
