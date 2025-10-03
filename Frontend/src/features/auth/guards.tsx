@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { user, status, me } = useSession();
+  const { status } = useSession();
   // Implementar lógica de protección y llamada a me()
   if (status === 'unauthenticated') return <Navigate to="/login" />;
   return <>{children}</>;

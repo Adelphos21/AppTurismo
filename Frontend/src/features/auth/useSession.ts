@@ -16,10 +16,10 @@ interface SessionState {
   logout: () => Promise<void>;
 }
 
-export const useSession = create<SessionState>((set) => ({
+export const useSession = create<SessionState>(() => ({
   user: null,
   status: 'unknown',
-  async login(credentials) {
+  async login() {
     // Implementar llamada a /auth/login
   },
   async me() {
