@@ -1,22 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { AppProviders } from '@app/providers';
-import { AppRouter } from '@app/router';
+import App from './App';
 import './index.css';
 import './styles/utilities.css';
-import { ClerkProvider } from '@clerk/clerk-react'
+import { ClerkProvider } from '@clerk/clerk-react';
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Publishable Key')
+  throw new Error('Missing Publishable Key');
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <AppProviders>
-        <AppRouter />
-      </AppProviders>
+      <App />
     </ClerkProvider>
   </React.StrictMode>
 );
