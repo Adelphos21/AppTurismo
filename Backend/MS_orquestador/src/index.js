@@ -6,6 +6,7 @@ const morgan = require('morgan');
 
 const authRoutes = require('./routes/auth');
 const guidesRoutes = require('./routes/guides');
+const reservasRoutes = require('./routes/reserva');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
@@ -29,6 +30,7 @@ app.get('/docs.json', (req, res) => res.json(swaggerSpec));
 // Rutas
 app.use('/internal/auth', authRoutes);
 app.use('/internal/guides', guidesRoutes);
+app.use('/internal/reservas', reservasRoutes);
 
 // Manejador de errores
 app.use((err, req, res, next) => {

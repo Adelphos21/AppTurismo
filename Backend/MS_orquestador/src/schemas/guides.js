@@ -1,6 +1,9 @@
 const { z } = require('zod');
 
-const GuiaIdiomaRequest = z.object({}).passthrough(); // Desconocido: permitir objeto
+const GuiaIdiomaRequest = z.object({
+  code: z.string().min(1).max(8),
+  name: z.string().min(1).max(50)
+}).passthrough(); // Desconocido: permitir objeto
 const GuiaRequest = z.object({
   nombres: z.string().min(1),
   apellidos: z.string().min(1),
@@ -19,4 +22,4 @@ const GuiaPutRequest = z.object({
   city: z.string().optional()
 }).passthrough();
 
-module.exports = { GuiaRequest, GuiaPutRequest };
+module.exports = { GuiaRequest, GuiaPutRequest, GuiaIdiomaRequest };

@@ -57,6 +57,42 @@ const swaggerSpec = {
           hourlyRate: { type: 'object', additionalProperties: true }
         }
       },
+      ReservaRequest: {
+        type: 'object',
+        required: ['user_id', 'guide_id', 'fecha_servicio', 'duracion_horas', 'precio_total'],
+        properties: {
+          user_id: { type: 'string', example: 'auth-user-123' },
+          guide_id: { type: 'integer', example: 45 },
+          fecha_reserva: { type: 'string', format: 'date-time', example: '2025-10-04T12:00:00Z' },
+          fecha_servicio: { type: 'string', format: 'date-time', example: '2025-10-05T09:00:00Z' },
+          duracion_horas: { type: 'number', example: 2 },
+          precio_total: { type: 'number', example: 150.00 },
+          estado: { type: 'string', enum: ['pendiente', 'confirmado', 'cancelado', 'completado'], example: 'pendiente' },
+          comentario: { type: 'string', example: 'Por favor, ser puntual.' }
+        }
+      },
+      ReservaResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 123 },
+          user_id: { type: 'string', example: 'auth-user-123' },
+          guide_id: { type: 'integer', example: 45 },
+          fecha_reserva: { type: 'string', format: 'date-time', example: '2025-10-04T12:00:00Z' },
+          fecha_servicio: { type: 'string', format: 'date-time', example: '2025-10-05T09:00:00Z' },
+          duracion_horas: { type: 'number', example: 2 },
+          precio_total: { type: 'number', example: 150.00 },
+          estado: { type: 'string', enum: ['pendiente', 'confirmado', 'cancelado', 'completado'], example: 'confirmado' },
+          comentario: { type: 'string', example: 'Servicio realizado correctamente.' },
+          fecha_creacion: { type: 'string', format: 'date-time', example: '2025-10-03T10:00:00Z' }
+        }
+      },
+      EstadoRequest: {
+        type: 'object',
+        required: ['estado'],
+        properties: {
+          estado: { type: 'string', enum: ['pendiente', 'confirmado', 'cancelado', 'completado'], example: 'cancelado' }
+        }
+      },
       ErrorResponse: {
         type: 'object',
         properties: {
@@ -153,6 +189,100 @@ const swaggerSpec = {
             description: 'Listado',
             content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/GuiaResponse' } } } }
           }
+        }
+      }
+    },
+        '/internal/reservas': {
+      post: {
+        tags: ['Reservas'],
+        summary: 'Crear una nueva reserva',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ReservaRequest'
+              }
+            }
+          }
+        },
+        responses: {
+          '201': {
+            description: 'Reserva creada exitosamente',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ReservaResponse' }
+              }
+            }
+          },
+          '400': { description: 'Error de validación' }
+        }
+      },
+      get: {
+        tags: ['Reservas'],
+        summary: 'Listar todas las reservas',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Listado de reservas',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/ReservaResponse' }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/internal/reservas/{id}': {
+      get: {
+        tags: ['Reservas'],
+        summary: 'Obtener una reserva por ID',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+        ],
+        responses: {
+          '200': {
+            description: 'Reserva encontrada',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/ReservaResponse' } } }
+          },
+          '404': { description: 'No encontrada' }
+        }
+      },
+      put: {
+        tags: ['Reservas'],
+        summary: 'Actualizar una reserva por ID',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/ReservaUpdateRequest' } }
+          }
+        },
+        responses: {
+          '200': { description: 'Reserva actualizada', content: { 'application/json': { schema: { $ref: '#/components/schemas/ReservaResponse' } } } },
+          '400': { description: 'Error de validación' },
+          '404': { description: 'No encontrada' }
+        }
+      },
+      delete: {
+        tags: ['Reservas'],
+        summary: 'Eliminar una reserva por ID',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } }
+        ],
+        responses: {
+          '204': { description: 'Eliminada correctamente' },
+          '404': { description: 'No encontrada' }
         }
       }
     }
