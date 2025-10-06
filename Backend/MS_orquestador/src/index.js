@@ -28,9 +28,9 @@ app.get('/api/health', (req, res) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 app.get('/docs.json', (req, res) => res.json(swaggerSpec));
 // Rutas
-app.use('/internal/auth', authRoutes);
-app.use('/internal/guides', guidesRoutes);
-app.use('/internal/reservas', reservasRoutes);
+app.use('/auth', authRoutes);
+app.use('/guides', guidesRoutes);
+app.use('/reservas', reservasRoutes);
 
 // Manejador de errores
 app.use((err, req, res, next) => {
