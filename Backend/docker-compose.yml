@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  # 🧩 MS de Autenticación (Django + Poetry + Gunicorn)
+  ms-auth:
+    build:
+      context: ./MS_Auth        # 👈 Cambiamos el contexto al microservicio directamente
+      dockerfile: Dockerfile
+    container_name: ms_auth
+    env_file:
+      - ./MS_Auth/.env
+    ports:
+      - "8000:8000"
+    working_dir: /app
+    command: ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  # 🧭 MS de Reservas (Node.js)
+  ms-reserva:
+    build:
+      context: ./MS-Reserva
+      dockerfile: Dockerfile
+    container_name: ms-reserva
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - backend-net
+
+  # 🗺️ MS de Guías (Spring Boot)
+  ms-guias:
+    build:
+      context: ./MS_Guias
+      dockerfile: Dockerfile
+    container_name: ms-guias
+    env_file:
+      - ./MS_Guias/.env
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - backend-net
+
+# Red compartida entre todos los MS
+networks:
+  backend-net:
+    driver: bridge
