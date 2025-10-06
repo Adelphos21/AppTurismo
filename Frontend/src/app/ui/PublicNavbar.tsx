@@ -1,75 +1,68 @@
-import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { HashLink } from "react-router-hash-link";
 import { FaRegUserCircle } from "react-icons/fa";
-import { Gift, Heart, HelpCircle } from "lucide-react";
+import { SignedOut, SignInButton } from "@clerk/clerk-react";
 
 export function PublicNavbar() {
   return (
-    <nav className="bg-gray-300 border-b px-6 py-3 flex justify-between items-center">
-      {/* Logo */}
-      <Link to="/" className="text-xl font-bold text-gray-800">
-        CityGuides
-      </Link>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-gray-200/80 backdrop-blur-md shadow-sm transition-all">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-3">
+        
+        {/* --- Logo e identidad --- */}
+        <Link to="/" className="flex items-center space-x-2">
+          <div className="w-9 h-9 bg-black rounded-full flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="white"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 21c-4.97-5.333-8-8.667-8-12a8 8 0 1 1 16 0c0 3.333-3.03 6.667-8 12z"
+              />
+              <circle cx="12" cy="9" r="2.5" fill="white" />
+            </svg>
+          </div>
+          <span className="text-xl font-semibold text-gray-900">
+            CityGuides
+          </span>
+        </Link>
 
-      {/* Menú usuario */}
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 hover:bg-gray-600">
-            <FaRegUserCircle className="text-black" size={28} />
-          </button>
-        </DropdownMenu.Trigger>
+        {/* --- Enlaces de navegación --- */}
+        <div className="hidden md:flex items-center space-x-8 text-gray-800 font-medium">
+          <Link to="/guides" className="hover:text-black transition">
+            Buscar guías
+          </Link>
+          
+          <HashLink smooth to="/#como-funciona" className="hover:text-black transition">
+            Cómo funciona
+          </HashLink>
 
-        <DropdownMenu.Content
-          className="bg-white text-gray-800 rounded-md shadow-lg border min-w-[220px] p-1"
-          sideOffset={8}
-        >
-          {/* Iniciar sesión / Registrarse */}
+          <HashLink smooth to="/#destinos" className="hover:text-black transition">
+            Destinos
+          </HashLink>
+
+          <HashLink smooth to="/#conviertete-en-guia" className="hover:text-black transition">
+            Conviértete en guía
+          </HashLink>
+        </div>
+
+        {/* --- Perfil / Sesión --- */}
+        <div className="flex items-center space-x-6">
           <SignedOut>
-            <DropdownMenu.Item asChild>
-              <SignInButton>
-                <button className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 w-full text-left">
-                  <FaRegUserCircle size={18} />
-                  <span>Iniciar sesión / Registrarse</span>
-                </button>
-              </SignInButton>
-            </DropdownMenu.Item>
+            <SignInButton>
+              <button className="flex items-center gap-2 px-4 py-2 rounded-md bg-black text-white font-medium hover:bg-gray-900 transition">
+                <FaRegUserCircle size={22} />
+                <span>Iniciar sesión</span>
+              </button>
+            </SignInButton>
           </SignedOut>
-
-          <DropdownMenu.Separator className="my-1 h-px bg-gray-200" />
-
-          {/* Más opciones */}
-          <DropdownMenu.Item asChild>
-            <Link
-              to="/rewards"
-              className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100"
-            >
-              <Gift size={18} />
-              <span>Viator Rewards</span>
-            </Link>
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item asChild>
-            <Link
-              to="/wishlist"
-              className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100"
-            >
-              <Heart size={18} />
-              <span>Listas de deseos</span>
-            </Link>
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item asChild>
-            <Link
-              to="/help"
-              className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100"
-            >
-              <HelpCircle size={18} />
-              <span>Ayuda</span>
-            </Link>
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Root>
+        </div>  
+      </div>
     </nav>
   );
 }

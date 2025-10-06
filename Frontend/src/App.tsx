@@ -16,7 +16,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/guides" element={<GuidesPage />} />
         <Route path="/guides/:id" element={<GuideProfilePage />} />
-        <Route path="/reservations/new" element={<NewReservationPage />} />
+       <Route path="/reservations/new/:guideId" element={<NewReservationPage />} />
         <Route path="/register-guide" element={<RegisterGuidePage />} />
     </Routes>
       </AppLayout>

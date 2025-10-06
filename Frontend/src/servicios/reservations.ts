@@ -1,6 +1,17 @@
 // src/api/users.ts
 import { api } from "api/api";
 
+export interface Reservation {
+  user_id: string;
+  guide_id: string;
+  fecha_reserva: string;
+  fecha_servicio: string;
+  duracion_horas: number;
+  precio_total: number;
+  estado: string;
+  comentario: string;
+  fecha_creacion: string;
+}
 
 export async function createReservation(reservation: { guideId: string; date: string; }) {
   const { data } = await api.post("/reservations", reservation);
