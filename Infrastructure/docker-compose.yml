@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  # 🐘 PostgreSQL (para el microservicio de Spring Boot)
+  postgres-ms:
+    image: postgres:17
+    container_name: postgres-ms
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/ubuntu/bd/data/postgres:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+
+  # 🐬 MariaDB (para el microservicio de Django o Node)
+  mariadb-ms:
+    image: mariadb:11
+    container_name: mariadb-ms
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: admin123
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin123
+      MARIADB_DATABASE: mydb
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/ubuntu/bd/data/mariadb:/var/lib/mysql
+    networks:
+      - microservices-net
+
+  # 🍃 MongoDB (para el microservicio Node.js)
+  mongodb-ms:
+    image: mongo:8
+    container_name: mongodb-ms
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    ports:
+      - "27017:27017"
+    volumes:
+      - /home/ubuntu/bd/data/mongodb:/data/db
+    networks:
+      - microservices-net
+
+# 🌐 Red compartida entre servicios
+networks:
+  microservices-net:
+    driver: bridge
