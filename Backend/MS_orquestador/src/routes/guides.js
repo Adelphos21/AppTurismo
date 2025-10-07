@@ -12,7 +12,7 @@ router.use(authCheck);
 router.post('/', async (req, res, next) => {
   try {
     const parsed = GuiaRequest.parse(req.body); // valida forma mínima
-    const r = await axios.post(`${GUIAS_URL}/internal/guides`, parsed, {
+    const r = await axios.post(`${GUIAS_URL}/guides`, parsed, {
       headers: { Authorization: req.headers['authorization'] || '' },
       timeout: 8000
     });
@@ -26,7 +26,7 @@ router.post('/', async (req, res, next) => {
 // GET /internal/guides/:id
 router.get('/:id', async (req, res, next) => {
   try {
-    const r = await axios.get(`${GUIAS_URL}/internal/guides/${req.params.id}`, {
+    const r = await axios.get(`${GUIAS_URL}/guides/${req.params.id}`, {
       headers: { Authorization: req.headers['authorization'] || '' },
       timeout: 5000
     });
@@ -38,13 +38,17 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // GET /internal/guides/search?city&language&certification&date...
+/*
 router.get('/', async (req, res, next) => {
   // si decides mapear /internal/guides?search=... cambia este handler
   next();
 });
+*/
+// GET /internal/guides/search?city&language&certification&date...
 router.get('/search', async (req, res, next) => {
   try {
-    const r = await axios.get(`${GUIAS_URL}/internal/guides/search`, {
+    // Aquí la corrección: apunta directamente a /guides/search
+    const r = await axios.get(`${GUIAS_URL}/guides/search`, {
       headers: { Authorization: req.headers['authorization'] || '' },
       params: req.query,
       timeout: 8000
@@ -56,11 +60,12 @@ router.get('/search', async (req, res, next) => {
   }
 });
 
+
 // PUT /internal/guides/:id
 router.put('/:id', async (req, res, next) => {
   try {
     const parsed = GuiaPutRequest.parse(req.body);
-    const r = await axios.put(`${GUIAS_URL}/internal/guides/${req.params.id}`, parsed, {
+    const r = await axios.put(`${GUIAS_URL}/guides/${req.params.id}`, parsed, {
       headers: { Authorization: req.headers['authorization'] || '' },
       timeout: 8000
     });
