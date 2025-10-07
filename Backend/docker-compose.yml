@@ -1,10 +1,10 @@
 version: "3.9"
 
 services:
-  # 🧩 MS de Autenticación (Django + Poetry + Gunicorn)
+  # 🧩 MS de Autenticación (Django + Poetry)
   ms-auth:
     build:
-      context: ./MS_Auth        # 👈 Cambiamos el contexto al microservicio directamente
+      context: ./MS_Auth
       dockerfile: Dockerfile
     container_name: ms_auth
     env_file:
@@ -13,6 +13,9 @@ services:
       - "8000:8000"
     working_dir: /app
     command: ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    restart: always
+    networks:
+      - backend-net
 
   # 🧭 MS de Reservas (Node.js)
   ms-reserva:
@@ -42,7 +45,31 @@ services:
     networks:
       - backend-net
 
-# Red compartida entre todos los MS
+  # ⚙️ ORQUESTADOR (Node.js 20 - API Gateway o coordinador)
+  orquestador:
+    build:
+      context: ./MS_orquestador       # 👈 Ajusta si tu carpeta tiene otro nombre exacto
+      dockerfile: Dockerfile
+    container_name: orquestador
+    env_file:
+      - ./MS_orquestador/.env         # 👈 Solo si usas .env interno
+    ports:
+      - "8081:8081"                # 👈 Puerto público del orquestador
+    environment:
+      - NODE_ENV=production
+      # 👇 Puedes inyectar direcciones internas de tus MS para que el orquestador las conozca
+      - MS_AUTH_URL=http://ms-auth:8000
+      - MS_RESERVA_URL=http://ms-reserva:4000
+      - MS_GUIAS_URL=http://ms-guias:8080
+    depends_on:
+      - ms-auth
+      - ms-reserva
+      - ms-guias
+    restart: always
+    networks:
+      - backend-net
+
+# 🌐 Red compartida entre todos los microservicios
 networks:
   backend-net:
     driver: bridge
