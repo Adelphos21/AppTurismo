@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./db.js";
-import reservasRoutes from "./routes/reservas.js";
+import reservasRoutes from "./routes/reservas.ts";
 
 dotenv.config();
 
