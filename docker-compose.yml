@@ -58,21 +58,20 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: https://api.tudominio.com/api
-        VITE_API_URL: http://localhost:8081
-        VITE_APP_ENV: dev
+        VITE_API_URL: http://proyecto-lb-967616209.us-east-1.elb.amazonaws.com
         VITE_CLERK_PUBLISHABLE_KEY: pk_test_c3RpcnJpbmctc3VuYmlyZC03NS5jbGVyay5hY2NvdW50cy5kZXYk
-        VITE_TOKEN: ""
     container_name: frontend
-    depends_on:
-      orquestador:
-        condition: service_started
-        required: true
-    networks:
-      - microservices-net
     ports:
       - "80:80"
+    depends_on:
+      - orquestador
+    environment:
+      VITE_API_URL: http://proyecto-lb-967616209.us-east-1.elb.amazonaws.com
+      VITE_CLERK_PUBLISHABLE_KEY: pk_test_c3RpcnJpbmctc3VuYmlyZC03NS5jbGVyay5hY2NvdW50cy5kZXYk
+    networks:
+      - microservices-net
     restart: unless-stopped
+
 
 
 # 🔗 Red compartida con la infraestructura
