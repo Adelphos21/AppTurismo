@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { FaRegUserCircle } from "react-icons/fa";
-import { SignedOut, SignInButton } from "@clerk/clerk-react";
+import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/clerk-react";
 
 export function PublicNavbar() {
   return (
@@ -37,15 +37,12 @@ export function PublicNavbar() {
           <Link to="/guides" className="hover:text-black transition">
             Buscar guías
           </Link>
-          
           <HashLink smooth to="/#como-funciona" className="hover:text-black transition">
             Cómo funciona
           </HashLink>
-
           <HashLink smooth to="/#destinos" className="hover:text-black transition">
             Destinos
           </HashLink>
-
           <HashLink smooth to="/#conviertete-en-guia" className="hover:text-black transition">
             Conviértete en guía
           </HashLink>
@@ -53,14 +50,20 @@ export function PublicNavbar() {
 
         {/* --- Perfil / Sesión --- */}
         <div className="flex items-center space-x-6">
+          {/* Si NO ha iniciado sesión → muestra botón de login */}
           <SignedOut>
-            <SignInButton>
+            <SignInButton mode="modal">
               <button className="flex items-center gap-2 px-4 py-2 rounded-md bg-black text-white font-medium hover:bg-gray-900 transition">
                 <FaRegUserCircle size={22} />
                 <span>Iniciar sesión</span>
               </button>
             </SignInButton>
           </SignedOut>
+
+          {/* Si SÍ ha iniciado sesión → muestra el avatar de usuario */}
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>  
       </div>
     </nav>

@@ -19,6 +19,7 @@ export default function GuidesPage() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [search, setSearch] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const cities = [
     "Lima",
@@ -30,31 +31,29 @@ export default function GuidesPage() {
     "Tarapoto",
   ];
 
+  // 🔍 Buscar guías desde el backend (no localmente)
   useEffect(() => {
-    getGuides()
-      .then((data) => {
-        console.log("📦 Datos recibidos:", data);
-        // Aseguramos que siempre sea un array
+    async function fetchGuides() {
+      try {
+        setLoading(true);
+        const params: Record<string, string> = {};
+        if (selectedCity) params.city = selectedCity;
+        if (search) params.language = search; // o podrías buscar por city/name si tu microservicio lo soporta
+
+        const data = await getGuides(params);
+        console.log("📦 Datos desde /guides/search:", data);
+
+        // Si tu microservicio responde con { guides: [...] }
         setGuides(Array.isArray(data) ? data : data?.guides || []);
-      })
-      .catch((err) => console.error("❌ Error al cargar guías:", err));
-  }, []);
+      } catch (err) {
+        console.error("❌ Error al cargar guías:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  // Filtro local (nombre o ciudad)
-  const filteredGuides = Array.isArray(guides)
-    ? guides.filter((g) => {
-        const matchSearch =
-          g.nombres?.toLowerCase().includes(search.toLowerCase()) ||
-          g.apellidos?.toLowerCase().includes(search.toLowerCase()) ||
-          g.city?.toLowerCase().includes(search.toLowerCase());
-
-        const matchCity = selectedCity
-          ? g.city?.toLowerCase() === selectedCity.toLowerCase()
-          : true;
-
-        return matchSearch && matchCity;
-      })
-    : [];
+    fetchGuides();
+  }, [search, selectedCity]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
@@ -74,7 +73,7 @@ export default function GuidesPage() {
           <FaSearch className="text-gray-400 mr-3" />
           <input
             type="text"
-            placeholder="Buscar guías o ciudades..."
+            placeholder="Buscar por idioma..."
             className="w-full outline-none text-gray-700"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -95,19 +94,22 @@ export default function GuidesPage() {
         </select>
       </div>
 
-      {/* Tarjetas de guías */}
+      {/* Tarjetas */}
       <div className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredGuides.length === 0 ? (
+        {loading ? (
+          <p className="text-gray-600 text-center col-span-full">
+            Cargando guías...
+          </p>
+        ) : guides.length === 0 ? (
           <p className="text-gray-600 text-center col-span-full">
             No se encontraron guías.
           </p>
         ) : (
-          filteredGuides.map((g) => (
+          guides.map((g) => (
             <div
               key={g.id}
               className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition"
             >
-              {/* Header */}
               <div className="flex items-center gap-4 mb-4">
                 <img
                   src={`https://ui-avatars.com/api/?name=${g.nombres}+${g.apellidos}&background=cccccc&color=000`}
@@ -122,8 +124,6 @@ export default function GuidesPage() {
                     <FaMapMarkerAlt className="text-red-500 mr-1" />
                     {g.city}, {g.country}
                   </div>
-
-                  {/* ⭐ Rating */}
                   {g.ratingAvg && (
                     <div className="flex items-center text-yellow-500 mt-1 text-sm">
                       <FaStar className="mr-1" />
@@ -135,10 +135,8 @@ export default function GuidesPage() {
                 </div>
               </div>
 
-              {/* Bio */}
               <p className="text-gray-700 text-sm mb-4">{g.bio}</p>
 
-              {/* Idiomas */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {g.languages?.map((lang, idx) => (
                   <div
@@ -153,15 +151,12 @@ export default function GuidesPage() {
 
               <hr className="my-3 border-gray-200" />
 
-              {/* Precio y botones */}
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-sm text-gray-600">Desde</span>
                   <p className="font-bold text-gray-900">
                     {g.hourlyRate
-                      ? `${g.hourlyRate.currency === "PEN" ? "S/" : ""} ${
-                          g.hourlyRate.amount
-                        } /hora`
+                      ? `${g.hourlyRate.currency === "PEN" ? "S/" : ""}${g.hourlyRate.amount} /hora`
                       : "S/ 55 /hora"}
                   </p>
                 </div>

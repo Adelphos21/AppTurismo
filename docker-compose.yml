@@ -1,0 +1,81 @@
+
+services:
+  # 🧠 ORQUESTADOR (Node.js)
+  orquestador:
+    build: ./Backend/MS_Orquestador
+    container_name: orquestador
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./Backend/MS_Orquestador/.env
+    depends_on:
+      - auth
+      - guias
+      - reserva
+    networks:
+      - microservices-net
+
+  # 🔐 AUTH SERVICE (Node.js)
+  auth:
+    build: ./Backend/MS_Auth
+    container_name: auth
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./Backend/MS_Auth/.env
+    networks:
+      - microservices-net
+
+  # 📘 GUIAS SERVICE (Spring Boot)
+  guias:
+    build: ./Backend/MS_Guias
+    container_name: guias
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./Backend/MS_Guias/.env
+    networks:
+      - microservices-net
+
+  # 📅 RESERVA SERVICE (Node.js)
+  reserva:
+    build: ./Backend/MS-Reserva
+    container_name: reserva
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./Backend/MS-Reserva/.env
+    networks:
+      - microservices-net
+
+    # ⚛️ FRONTEND (React + Vite + Tailwind)
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: https://api.tudominio.com/api
+        VITE_API_URL: http://localhost:8081
+        VITE_APP_ENV: dev
+        VITE_CLERK_PUBLISHABLE_KEY: pk_test_c3RpcnJpbmctc3VuYmlyZC03NS5jbGVyay5hY2NvdW50cy5kZXYk
+        VITE_TOKEN: ""
+    container_name: frontend
+    depends_on:
+      orquestador:
+        condition: service_started
+        required: true
+    networks:
+      - microservices-net
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+
+# 🔗 Red compartida con la infraestructura
+networks:
+  microservices-net:
+    external: true
