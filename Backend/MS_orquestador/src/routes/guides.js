@@ -37,6 +37,19 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.get('/user/:id', async (req, res, next) => {
+  try {
+    const r = await axios.get(`${GUIAS_URL}/guides/user/${req.params.id}`, {
+      headers: { Authorization: req.headers['authorization'] || '' },
+      timeout: 5000
+    });
+    res.status(r.status).json(r.data);
+  } catch (err) {
+    err.service = 'ms_guias';
+    next(err);
+  }
+});
+
 // GET /internal/guides/search?city&language&certification&date...
 /*
 router.get('/', async (req, res, next) => {
