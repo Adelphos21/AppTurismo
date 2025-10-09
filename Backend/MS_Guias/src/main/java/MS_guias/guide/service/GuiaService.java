@@ -48,12 +48,23 @@ public class GuiaService {
         if(guideRepo.existsByCorreo(guide.getCorreo())){
             throw new ConflictException("Ya existe un usuario registrado con este correo");
         }
+
+        if (guideRepo.existsByUserId(guide.getUserId())) {
+            throw new ConflictException("Este usuario ya está vinculado a un guía");
+        }
+
         return guideRepo.save(guide);
     }
 
     public Guia findById(Long id) {
         return guideRepo.findById(id).orElseThrow(() -> new NotFoundException("Guia no encontrado!"));
     }
+
+    public Guia findByUserId(Long userId) {
+        return guideRepo.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException("Guía no encontrado con el userId especificado"));
+    }
+
     public void updateGuide(Long id, GuiaPutRequest guiaPutRequest) {
         Guia guia = findById(id);
 

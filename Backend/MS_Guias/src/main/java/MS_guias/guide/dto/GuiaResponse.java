@@ -7,6 +7,7 @@ import java.util.List;
 
 public class GuiaResponse {
     public Long id;
+
     public String fullName;
     public String city;
     public Double ratingAvg;

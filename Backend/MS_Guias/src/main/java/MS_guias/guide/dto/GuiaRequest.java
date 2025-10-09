@@ -33,4 +33,7 @@ public class GuiaRequest {
     @NotBlank(message = "El correo es obligatorio")
     @Email(message = "El correo debe tener un formato válido")
     private String correo;
+
+    @NotNull(message = "El ID del usuario es obligatorio")
+    public Long userId;
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GuiaRepository extends JpaRepository<Guia, Long> {
     @Query("SELECT g FROM Guia g WHERE (:city IS NULL OR lower(g.city) = lower(:city))")
@@ -16,8 +17,12 @@ public interface GuiaRepository extends JpaRepository<Guia, Long> {
     @Query("SELECT g FROM  Guia g WHERE (g.id = :id)")
     Guia searchGuiaBy(Long id);
 
+    Optional<Guia> findByUserId(Long userId);
+
     boolean existsByDni(String dni);
     boolean existsByCorreo(String correo);
+
+    boolean existsByUserId(Long userId);
 
     List<Guia> searchByCertification(Boolean certification);
 
