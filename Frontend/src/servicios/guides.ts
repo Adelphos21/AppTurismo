@@ -1,4 +1,4 @@
-import { api } from "api/api";
+import { orchApi } from "api/api";
 
 /**
  * Crea un nuevo guía (POST /guides)
@@ -15,7 +15,7 @@ export async function createGuide(guide: {
   languages: { idioma: string }[];
   correo: string;
 }) {
-  const { data } = await api.post("/guides", guide);
+  const { data } = await orchApi.post("/guides", guide);
   return data;
 }
 
@@ -29,7 +29,7 @@ export async function getGuides(params?: {
   certification?: boolean;
   date?: string;
 }) {
-  const { data } = await api.get("/guides/search", { params });
+  const { data } = await orchApi.get("/guides/search", { params });
   return data;
 }
 
@@ -38,6 +38,6 @@ export async function getGuides(params?: {
  * (GET /guides/:id)
  */
 export async function getGuideById(id: string) {
-  const { data } = await api.get(`/guides/${id}`);
+  const { data } = await orchApi.get(`/guides/${id}`);
   return data;
 }

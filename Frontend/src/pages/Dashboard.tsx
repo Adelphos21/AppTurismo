@@ -220,7 +220,7 @@ export default function Dashboard() {
         <section className="mb-12">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Próximas reservas</h2>
-            <Link to="/reservas" className="text-sm text-gray-600 hover:underline">
+            <Link to="/reservations" className="text-sm text-gray-600 hover:underline">
               Ver todas →
             </Link>
           </div>
@@ -246,7 +246,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <Link
-                  to={`/reservas/${r.id}`}
+                  to={`/reservations/${r.id}`}
                   className="mt-3 inline-block text-sm text-white bg-black px-4 py-2 rounded-md hover:bg-gray-800 transition"
                 >
                   Ver detalles

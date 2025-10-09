@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { getMe } from 'servicios/auth';
 
 export type User = {
   id: string;
@@ -23,7 +24,24 @@ export const useSession = create<SessionState>(() => ({
     // Implementar llamada a /auth/login
   },
   async me() {
-    // Implementar llamada a /auth/me
+    try {
+      const data = await getMe();
+      // Se espera que el orquestador devuelva info mínima del usuario
+      if (data) {
+        this.user = {
+          id: data.user_id || data.id || data.sub || '',
+          email: data.email || data.correo || '',
+          role: data.role || (data.is_guide ? 'traveler' : 'traveler'),
+        } as any;
+        this.status = 'authenticated';
+      } else {
+        this.user = null;
+        this.status = 'unauthenticated';
+      }
+    } catch (err) {
+      this.user = null;
+      this.status = 'unauthenticated';
+    }
   },
   async logout() {
     // Implementar llamada a /auth/logout

@@ -1,6 +1,8 @@
 // src/pages/ProfilePage.tsx
 import { useEffect, useState } from "react";
 import { useApi } from "api/useApi";
+import { getUserReservations, confirmReservation, cancelReservation } from "servicios/reservations";
+import { getMe } from "servicios/auth";
 
 interface User {
   id: string;
@@ -27,12 +29,13 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [userData, resData] = await Promise.all([
-          get("/me"),
-          get("/reservations/me"),
-        ]);
-        setUser(userData);
-        setReservations(resData);
+  // Validar token y obtener info mínima desde el orquestador (/auth/private)
+  const userData = await getMe();
+  setUser(userData);
+
+  // Obtener reservas a través del servicio que apunta al orquestador
+  const resData = await getUserReservations(userData.id);
+        setReservations(resData || []);
       } catch (error) {
         console.error("Error al cargar datos del perfil:", error);
       } finally {
@@ -45,9 +48,17 @@ export default function ProfilePage() {
   // 🔹 Cambiar estado de reserva
   const handleStatusChange = async (id: string, status: "confirmed" | "cancelled") => {
     try {
-      await patch(`/reservations/${id}/status`, { status });
-      const updated = await get("/reservations/me");
-      setReservations(updated);
+      if (status === "confirmed") {
+        await confirmReservation(id, {});
+      } else {
+        await cancelReservation(id, {});
+      }
+
+      // Refrescar reservas desde el orquestador
+      if (user?.id) {
+        const updated = await getUserReservations(user.id);
+        setReservations(updated || []);
+      }
     } catch (error) {
       console.error("Error al actualizar estado de reserva:", error);
     }

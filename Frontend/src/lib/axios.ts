@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  // Usar VITE_API_URL (coincide con Frontend/.env)
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
@@ -12,7 +13,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await api.post('/auth/refresh');
+    // Intentar refresh/token endpoint si existe
+    await api.post('/auth/token');
         return api(originalRequest);
       } catch (refreshError) {
         window.location.href = '/login';
