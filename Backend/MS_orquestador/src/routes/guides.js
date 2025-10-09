@@ -23,10 +23,9 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// GET /internal/guides/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/user/:userid', async (req, res, next) => {
   try {
-    const r = await axios.get(`${GUIAS_URL}/guides/${req.params.id}`, {
+    const r = await axios.get(`${GUIAS_URL}/guides/user/${req.params.userid}`, {
       headers: { Authorization: req.headers['authorization'] || '' },
       timeout: 5000
     });
@@ -37,9 +36,10 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.get('/user/:id', async (req, res, next) => {
+// GET /internal/guides/:id
+router.get('/:id', async (req, res, next) => {
   try {
-    const r = await axios.get(`${GUIAS_URL}/guides/user/${req.params.id}`, {
+    const r = await axios.get(`${GUIAS_URL}/guides/${req.params.id}`, {
       headers: { Authorization: req.headers['authorization'] || '' },
       timeout: 5000
     });

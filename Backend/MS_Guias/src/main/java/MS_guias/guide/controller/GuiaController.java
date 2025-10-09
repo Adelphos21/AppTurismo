@@ -116,7 +116,7 @@ public class GuiaController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getGuideByUserId(@PathVariable Long userId) {
+    public ResponseEntity<?> getGuideByUserId(@PathVariable String userId) {
         try {
             var g = service.findByUserId(userId);
 

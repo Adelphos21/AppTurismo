@@ -35,5 +35,5 @@ public class GuiaRequest {
     private String correo;
 
     @NotNull(message = "El ID del usuario es obligatorio")
-    public Long userId;
+    public String userId;
 }

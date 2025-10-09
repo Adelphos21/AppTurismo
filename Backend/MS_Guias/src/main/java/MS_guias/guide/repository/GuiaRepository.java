@@ -17,12 +17,12 @@ public interface GuiaRepository extends JpaRepository<Guia, Long> {
     @Query("SELECT g FROM  Guia g WHERE (g.id = :id)")
     Guia searchGuiaBy(Long id);
 
-    Optional<Guia> findByUserId(Long userId);
+    Optional<Guia> findByUserId(String userId);
 
     boolean existsByDni(String dni);
     boolean existsByCorreo(String correo);
 
-    boolean existsByUserId(Long userId);
+    boolean existsByUserId(String userId);
 
     List<Guia> searchByCertification(Boolean certification);
 

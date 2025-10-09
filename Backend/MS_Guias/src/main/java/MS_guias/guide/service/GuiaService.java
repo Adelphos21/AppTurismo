@@ -60,7 +60,7 @@ public class GuiaService {
         return guideRepo.findById(id).orElseThrow(() -> new NotFoundException("Guia no encontrado!"));
     }
 
-    public Guia findByUserId(Long userId) {
+    public Guia findByUserId(String userId) {
         return guideRepo.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("Guía no encontrado con el userId especificado"));
     }

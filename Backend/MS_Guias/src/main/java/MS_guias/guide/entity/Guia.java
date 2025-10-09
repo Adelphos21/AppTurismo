@@ -52,5 +52,5 @@ public class Guia {
     private List<GuiaIdioma> idiomas = new ArrayList<>();
 
     @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
+    private String userId;
 }
