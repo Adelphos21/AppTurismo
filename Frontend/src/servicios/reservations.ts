@@ -1,34 +1,31 @@
-// src/api/users.ts
 import { api } from "api/api";
 
-export interface Reservation {
-  user_id: string;
-  guide_id: string;
-  fecha_reserva: string;
-  fecha_servicio: string;
-  duracion_horas: number;
-  precio_total: number;
-  estado: string;
-  comentario: string;
-  fecha_creacion: string;
-}
-
-export async function createReservation(reservation: { guideId: string; date: string; }) {
-  const { data } = await api.post("/reservations", reservation);
+export async function createReservation(reservation: any) {
+  const { data } = await api.post("/reservas", reservation);
   return data;
 }
 
-export async function getMyReservations() {
-  const { data } = await api.get("/reservations/me");
+export async function getReservationById(id: string) {
+  const { data } = await api.get(`/reservas/${id}`);
   return data;
 }
 
-export async function getGuideReservations() {
-  const { data } = await api.get("/reservations/guide");
+export async function confirmReservation(id: string, body: any) {
+  const { data } = await api.put(`/reservas/${id}/confirmar`, body);
   return data;
 }
 
-export async function updateReservationStatus(id: string, status: "confirmed" | "cancelled") {
-  const { data } = await api.patch(`/reservations/${id}/status`, { status });
+export async function cancelReservation(id: string, body: any) {
+  const { data } = await api.put(`/reservas/${id}/cancelar`, body);
+  return data;
+}
+
+export async function getUserReservations(userId: string) {
+  const { data } = await api.get(`/reservas/usuario/${userId}`);
+  return data;
+}
+
+export async function getGuideReservations(guideId: string) {
+  const { data } = await api.get(`/reservas/guia/${guideId}`);
   return data;
 }

@@ -51,5 +51,6 @@ public class Guia {
     @OneToMany(mappedBy = "guia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GuiaIdioma> idiomas = new ArrayList<>();
 
-
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long userId;
 }

@@ -3,6 +3,7 @@ package MS_guias.guide.controller;
 import MS_guias.availabilityslot.dto.HoldRequestDTO;
 import MS_guias.availabilityslot.dto.SlotResponse;
 import MS_guias.exception.ConflictException;
+import MS_guias.exception.NotFoundException;
 import MS_guias.guide.dto.GuiaPutRequest;
 import MS_guias.guide.dto.GuiaRequest;
 import MS_guias.guide.dto.GuiaResponse;
@@ -57,6 +58,7 @@ public class GuiaController {
                     }).toList();
             newGuide.setIdiomas(idiomas);
             newGuide.setCorreo(payload.getCorreo());
+            newGuide.setUserId(payload.userId);
             Guia savedGuide = service.createGuide(newGuide);
             return ResponseEntity.status(201).body(Map.of(
                     "id", savedGuide.getId(),
@@ -98,6 +100,7 @@ public class GuiaController {
             // Crear respuesta básica
             return ResponseEntity.ok(Map.of(
                     "id", g.getId(),
+                    "userId", g.getUserId(),
                     "nombres", g.getNombres(),
                     "apellidos", g.getApellidos(),
                     "city", g.getCity(),
@@ -109,6 +112,37 @@ public class GuiaController {
             ));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(Map.of("error", "not_found", "message", "Guia no encontrado!"));
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getGuideByUserId(@PathVariable Long userId) {
+        try {
+            var g = service.findByUserId(userId);
+
+            var idiomas = g.getIdiomas().stream()
+                    .map(i -> Map.of(
+                            "code", i.getLanguageCode(),
+                            "name", i.getLanguageName()))
+                    .toList();
+
+            return ResponseEntity.ok(Map.of(
+                    "id", g.getId(),
+                    "userId", g.getUserId(),
+                    "nombres", g.getNombres(),
+                    "apellidos", g.getApellidos(),
+                    "city", g.getCity(),
+                    "country", g.getCountry(),
+                    "bio", g.getBio(),
+                    "certification", g.getCertification(),
+                    "ratingAvg", g.getRatingAvg(),
+                    "languages", idiomas
+            ));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "error", "not_found",
+                    "message", e.getMessage()
+            ));
         }
     }
 
