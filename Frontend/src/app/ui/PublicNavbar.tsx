@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { FaRegUserCircle } from "react-icons/fa";
 import { SignedOut, SignInButton } from "@clerk/clerk-react";
+import logaso from "../../assets/logaso.jpeg"
 
 export function PublicNavbar() {
   return (
@@ -10,25 +11,14 @@ export function PublicNavbar() {
         
         {/* --- Logo e identidad --- */}
         <Link to="/" className="flex items-center space-x-2">
-          <div className="w-9 h-9 bg-black rounded-full flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="white"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 21c-4.97-5.333-8-8.667-8-12a8 8 0 1 1 16 0c0 3.333-3.03 6.667-8 12z"
-              />
-              <circle cx="12" cy="9" r="2.5" fill="white" />
-            </svg>
-          </div>
+          
+          <img
+            src={logaso}
+            alt="Logo"
+            className="w-9 h-9 rounded-full object-cover"
+          />
           <span className="text-xl font-semibold text-gray-900">
-            CityGuides
+            TurismoConect
           </span>
         </Link>
 
