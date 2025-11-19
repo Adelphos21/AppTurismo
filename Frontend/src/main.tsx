@@ -1,19 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
-import './styles/utilities.css';
-import { ClerkProvider } from '@clerk/clerk-react';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import "./styles/utilities.css";
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Publishable Key');
-}
+// Asegurarse de que el elemento con id "root" exista
+const rootElement = document.getElementById("root");
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <App />
-    </ClerkProvider>
-  </React.StrictMode>
-);
+    </React.StrictMode>
+  );
+} else {
+  console.error('El elemento con id "root" no se encontró en el DOM');
+}

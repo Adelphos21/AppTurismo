@@ -1,10 +1,19 @@
-
-import { useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
+import { useSession } from "features/auth/useSession";
 import { PublicNavbar } from "./PublicNavbar";
 import { TouristNavbar } from "./TouristNavbar";
 
 export function AppNavbar() {
-  const { isSignedIn } = useUser();
+  const { status, me } = useSession();
 
-  return isSignedIn ? <TouristNavbar /> : <PublicNavbar />;
+  useEffect(() => {
+    if (status === "unknown") {
+      const token = localStorage.getItem("auth_token");
+      if (token) {
+        me();
+      }
+    }
+  }, [status, me]);
+
+  return status === "authenticated" ? <TouristNavbar /> : <PublicNavbar />;
 }

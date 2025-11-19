@@ -1,10 +1,5 @@
-// src/api/guides.ts
-
-import { api } from "api/api";
-
-export async function getMe(token: string) {
-  const { data } = await api.get("/me", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return data;
-}
+ import api from "@lib/axios";
+ export async function getMe() {
+ const { data } = await api.get("/auth/me");
+ return data;
+ }
