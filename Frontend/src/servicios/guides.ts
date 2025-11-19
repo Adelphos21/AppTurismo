@@ -1,43 +1,50 @@
+// src/servicios/guides.ts
 import api from "@lib/axios";
 
-// DTOs de tu backend:
-export type GuideLanguage = {
+/** Idioma de un guía */
+export interface GuideLanguage {
   code: string;
   name: string;
-};
+}
 
-export type GuideDetail = {
-  id: string;
-  nombres: string;
-  apellidos: string;
-  bio: string;
-  city: string;
-  country: string;
-  certification: boolean;
-  ratingAvg: number;
-  languages: GuideLanguage[];
-  createdAt?: string;
-};
-
-export type GuideSearchItem = {
+/** Resumen de guía (listado / búsqueda) */
+export interface GuideSummary {
   id: string;
   fullName: string;
   city?: string;
-  ratingAvg?: number;
+  ratingAvg: number;
   certification?: boolean;
-  languages?: string[];
+  languages: string[];
+
   nextAvailable?: {
     startTime: string;
     endTime: string;
     status: string;
   };
+
   hourlyRate?: {
     currency: string;
     hourlyRate: number;
   };
-};
+}
 
-// Función para crear un nuevo guía
+/** Alias para usar en listas si ya tienes el tipo Guide en otras partes */
+export type Guide = GuideSummary;
+
+/** Perfil detallado de guía (vista de perfil, dashboard guía, etc.) */
+export interface GuideProfile {
+  id: string;
+  nombres: string;
+  apellidos: string;
+  city?: string;
+  country?: string;
+  bio?: string;
+  certification?: boolean;
+  ratingAvg: number;
+  languages: GuideLanguage[];
+}
+
+/** Crear guía (formulario "Conviértete en guía") */
 export async function createGuide(body: {
   nombres: string;
   apellidos: string;
@@ -50,29 +57,43 @@ export async function createGuide(body: {
   correo: string;
 }) {
   const { data } = await api.post("/guides", body);
-  return data;
+  return data as { id: string; message: string };
 }
 
-// Función para obtener guías con filtros de búsqueda
+/** Buscar guías (listado principal de guías) */
 export async function getGuides(params?: {
   city?: string;
+  date?: string;         // YYYY-MM-DD
   language?: string;
-  date?: string;
   certification?: boolean;
-}): Promise<GuideSearchItem[]> {
-  const { data } = await api.get("/guides/search", {
+}) {
+  const { data } = await api.get<GuideSummary[]>("/guides/search", {
     params: {
       city: params?.city,
-      language: params?.language,
       date: params?.date,
-      certification: params?.certification,
+      language: params?.language,
+      // el lambda espera "true"/"false" como string
+      certification:
+        typeof params?.certification === "boolean"
+          ? String(params.certification)
+          : undefined,
     },
   });
+
   return data;
 }
 
-// Función para obtener los detalles de un guía por su ID
-export async function getGuideById(id: string): Promise<GuideDetail> {
-  const { data } = await api.get(`/guides/${id}`);
+/** Compat: si en algún lado importas getGuide en singular */
+export async function getGuide(id: string) {
+  const { data } = await api.get<GuideProfile>(`/guides/${id}`);
+  return data;
+}
+
+/** Nombre alternativo más explícito por si lo usas así en alguna parte */
+export const getGuideById = getGuide;
+
+/** Perfil de guía del usuario autenticado (GET /guides/me) */
+export async function getMyGuideProfile() {
+  const { data } = await api.get<GuideProfile>("/guides/me");
   return data;
 }
